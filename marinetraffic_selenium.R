@@ -20,6 +20,8 @@ remDr$screenshot(useView  = TRUE, display = FALSE)
 
 my_source <- remDr$getPageSource()
 
+f_lat <- substr(my_source, as.numeric(gregexpr(pattern ='latitude...',my_source))+ 10, stop = as.numeric(gregexpr(pattern ='latitude...',my_source)) +10 + 10)
+f_lat
 a_lat <- substr(my_source, as.numeric(gregexpr(pattern ='latitude',my_source)) + 10, stop = as.numeric(gregexpr(pattern ='latitude',my_source)) + 20)
 a_lat
 a_lon <- substr(my_source, as.numeric(gregexpr(pattern ='longitude',my_source)) + 11, stop = as.numeric(gregexpr(pattern ='longitude',my_source)) + 21)
@@ -29,18 +31,24 @@ a_course
 
 webElem <- remDr$findElement(using = "css", "#ship-search-adv")
 webElem$sendKeysToElement(list("Hyundai Premium"))
-webElem$screenshot(useView  = TRUE, display = TRUE)
+# webElem$sendKeysToElement(list(key = "return"))
+# search_button <- remDr$findElement(using = "class", "#search-holder")
+# webElem$sendKeysToElement(sendKeys =  "enter")
+# webElem$screenshot(useView  = TRUE, display = TRUE)
 #webElem$sendKeysToElement(list(key = 'enter'))
 
 #webElem <- remDr$findElement(using = "css", ".value")
 #webElem <- remDr$findElement(using = "css", "input")
 #webElem$sendKeysToElement(list("HYUNDAI PREMIUM"))
 
-webElem2 <- remDr$findElement(using = "css selector", "a.button.search-filter-btn.success.small")
+webElem2 <- remDr$findElement(using = "css", ".button.success")
 webElem2$clickElement()
 Sys.sleep(10)
 
-webElem2$screenshot(useView  = TRUE, display = TRUE)
+webElem3 <- remDr$findElement(using = "css", "a.th")
+webElem3$clickElement()
+webElem3$screenshot(useView  = TRUE, display = TRUE)
+my_source <- remDr$getPageSource()
 
 # webElem <- remDr$findElement(using = "id", "div-gpt-ad-1372944779896-1")
 # webElem <- remDr$findElements(using = "css selector", "div input")
@@ -56,3 +64,6 @@ webElem$goForward()
 
 remDr$close()
 pJS$stop()
+
+library(readr)
+write.csv(my_source, paste("my_source_", Sys.Date(), ".txt"))
