@@ -5,7 +5,12 @@ library(dplyr)
 m <- leaflet() %>% 
   addTiles() %>% 
   addMarkers(lng = 114.33002, lat = 22.55963, popup= "Hyundai Premium Cargo Ship") %>% 
-  addMarkers(lng = 102.33348, lat = 1.88812, popup = "New Position")
+  addMarkers(lng = 120.30818, lat = 22.56662, popup = "Zim Rotterdam")
+m
+
+m <- leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(lng = vessel_table$lon, lat = vessel_table$lat, popup= vessel_table$`Requested Vessel`)
 m
 
 container <- daily_tracker %>%

@@ -10,6 +10,7 @@ Sys.sleep(5)
 vessels <- c("CONCORDIA", "HYUNDAI PREMIUM", "MALLECO", "Not a ship")
 source("vessel_scrape.R")
 vessel_table <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
+names(vessel_table) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading")
 
 vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
 
