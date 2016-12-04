@@ -10,7 +10,7 @@ m
 
 m <- leaflet() %>% 
   addTiles() %>% 
-  addMarkers(lng = vessel_table$lon, lat = vessel_table$lat, popup= vessel_table$`Requested Vessel`)
+  addMarkers(lng = vessel_table_plot$lon, lat = vessel_table_plot$lat, popup= paste(vessel_table_plot$`Requested Vessel`, " Heading: ", vessel_table_plot$Heading))
 m
 
 container <- daily_tracker %>%

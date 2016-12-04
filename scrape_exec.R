@@ -8,19 +8,22 @@ Sys.sleep(5)
 # remDr <- remoteDriver(browserName = "phantomjs", extraCapabilities = eCap)
 # remDr$open()
 vessels <- c("CONCORDIA", "HYUNDAI PREMIUM", "MALLECO", "Not a ship")
-source("vessel_scrape.R")
-vessel_table <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
+source("vessel_scrape2.R")
+vessel_table <- ldply(vessel_list2$Vessel, function(x) scrape(x), .progress = "text", .inform = TRUE)
 names(vessel_table) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading")
 
-vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
+vessel_table_plot <- subset(vessel_table, Returned!="" & lat_Hemi== "N" & lon_Hemi=="E")
 
-vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)
+
+# vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
+# 
+# vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)
 vessel_table2 <- ldply("CONCORDIA", function(x) scrape(x), .progress = "text", .inform = TRUE)
-vessel_table3 <- ldply("MALLECO", function(x) scrape(x), .progress = "text", .inform = TRUE)
-
-scrape("Zim Rotterdam")
-remDr$getCurrentURL()
-scrape("CONCORDIA")
+# vessel_table3 <- ldply("MALLECO", function(x) scrape(x), .progress = "text", .inform = TRUE)
+# 
+# scrape("Zim Rotterdam")
+# remDr$getCurrentURL()
+# scrape("CONCORDIA")
 
 remDr$navigate("https://www.google.com")
 
