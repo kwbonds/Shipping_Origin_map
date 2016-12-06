@@ -27,7 +27,7 @@ plot_SW <- subset(vessel_table, Returned!="" & lat_Hemi== "S" & lon_Hemi=="W")
 # vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
 # vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)
-vessel_table2 <- ldply("CONCORDIA", function(x) scrape(x), .progress = "text", .inform = TRUE)
+vessel_table2 <- ldply(c("CONCORDIA", "HYUNDAI PREMIUM"), function(x) scrape(x), .progress = "text", .inform = TRUE)
 names(vessel_table2) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading", "Last Position DT")
 # vessel_table3 <- ldply("MALLECO", function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
