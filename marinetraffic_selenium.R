@@ -27,6 +27,10 @@ Sys.sleep(10)
 webElem3 <- remDr$findElement(using = "css", "a.th")
 webElem3$clickElement()
 webElem3$screenshot(useView  = TRUE, display = TRUE)
+
+last_pos <- remDr$findElement(using = "id", "last_report_ts")
+last_pos_dt <- as.character(last_pos$getElementText())
+
 my_source <- remDr$getPageSource()
 # my_source <- remDr$getPageSource()
 
@@ -46,6 +50,7 @@ a_course
 
 vessel <- substr(my_source, as.numeric(gregexpr(pattern ='og:title',my_source)) + 19, stop = as.numeric(gregexpr(pattern =' - see',my_source))-13)
 vessel
+
 remDr$close()
 pJS$stop()
 

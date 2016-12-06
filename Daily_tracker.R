@@ -15,6 +15,7 @@ save(daily_tracker, file = paste("dailey_tracker_", Sys.Date(), ".rda", sep = ""
 load(file = "dailey_tracker_2016-12-01.rda")
 
 container_list <- daily_tracker %>% 
+  filter(vessel!= "")
   select(`Container Number`, Vessel) %>% 
   group_by(`Container Number`, Vessel) %>% 
   summarise(`count`= n())

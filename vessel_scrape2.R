@@ -19,6 +19,10 @@ scrape <- function(boat){
   webElem$sendKeysToElement(list(key= "enter"))
   Sys.sleep(10)
   #webElem3$screenshot(useView  = TRUE, display = TRUE)
+  
+  last_pos <- remDr$findElement(using = "id", "last_report_ts")
+  last_pos_dt <- as.character(last_pos$getElementText())
+  
   my_source <- remDr$getPageSource()
   # my_source <- remDr$getPageSource()
   
@@ -40,8 +44,10 @@ scrape <- function(boat){
   course <- trimws(course)
   vessel <- substr(my_source, as.numeric(gregexpr(pattern ='og:title',my_source)) + 19, stop = as.numeric(gregexpr(pattern =' - see',my_source))-13)
   
+
   remDr$close()
   pJS$stop()
-  return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))
+  return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course, last_pos_dt))
+  # return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))
 }
 
