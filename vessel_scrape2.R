@@ -1,4 +1,5 @@
 scrape <- function(boat){
+  # Server setup ----
   # require(RSelenium)
   pJS <- phantom(pjs_cmd = "C:\\Users\\Ke2l8b1\\Documents\\Shipping_origin_map\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe")
   Sys.sleep(5)
@@ -7,25 +8,27 @@ scrape <- function(boat){
   Sys.sleep(2)
   remDr$open()
   Sys.sleep(2)
+  # Navigate to www.vesselfinder.com ----
   remDr$navigate("https://www.vesselfinder.com/vessels")
   Sys.sleep(5)
-  
+  # Find input field and activate ----
   webElem <- remDr$findElement(using = "css", "#search-holder .selectize-input.items.not-full")
   webElem$clickElement()
   webElem <- remDr$findElement(using = "css", "#search-holder .selectize-input.items.not-full.focus.input-active input")
   # webElem <- remDr$findElement(using = "css", "#search-holder .input-active")
+  # Send a vessel ----
   webElem$sendKeysToElement(list(boat))
   Sys.sleep(3)
   webElem$sendKeysToElement(list(key= "enter"))
   Sys.sleep(10)
   #webElem3$screenshot(useView  = TRUE, display = TRUE)
-  
+  # Get last position date as text ----
   last_pos <- remDr$findElement(using = "id", "last_report_ts")
   last_pos_dt <- as.character(last_pos$getElementText())
-  
+  # Get source ----
   my_source <- remDr$getPageSource()
   # my_source <- remDr$getPageSource()
-  
+  # Search and scrape source for Lon/Lat, Course, vessel ---- 
   # f_lat <- substr(my_source, as.numeric(gregexpr(pattern ='latitude...',my_source))+ 10, stop = as.numeric(gregexpr(pattern ='latitude...',my_source)) +10 + 10)
   a_lat <- substr(my_source, as.numeric(gregexpr(pattern ='latitude">',my_source))+10, stop = as.numeric(gregexpr(pattern ='latitude">',my_source)) + 20)
   if(grepl('<',a_lat)) {a_lat <- substr(a_lat, 1, regexpr('<', a_lat)-1)}
