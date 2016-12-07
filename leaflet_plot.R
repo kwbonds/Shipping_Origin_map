@@ -43,10 +43,16 @@ Enriched_table <-  Enriched_table %>% filter(Vessel != "") %>%
 #     attribution = "Weather data © 2012 IEM Nexrad"
 #   )
 # m
-# leaf_plot ----
+# leaf_plot with rbind ----
 m <- leaflet() %>% 
   addProviderTiles("Esri.WorldTopoMap") %>% 
-  addMarkers(lng = leaf_plot$lon[42], lat = leaf_plot$lat[42], popup= paste(leaf_plot$`Requested Vessel`,paste("Last Report: ", leaf_plot$`Last Position DT`),paste("Heading: ", leaf_plot$Heading), paste("Total Units: ", format(leaf_plot$Units, big.mark = ",")), paste("Estimated ELC: $", format(leaf_plot$`Total Estimated ELC`, big.mark = ",")), sep = "<br/>")) %>% 
+  addMarkers(lng = plot_all$lon, lat = plot_all$lat, 
+             popup= paste(plot_all$`Requested Vessel`, 
+                          paste("Last Report: ", plot_all$`Last Position DT`),
+                          paste("Heading: ", plot_all$Heading), 
+                          paste("Total Units: ", format(plot_all$Units, big.mark = ",")), 
+                          paste("Estimated ELC: $", format(plot_all$`Total Estimated ELC`, big.mark = ",")), 
+                          sep = "<br/>")) %>% 
   addWMSTiles(
     "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
     layers = "nexrad-n0r-900913",

@@ -29,6 +29,7 @@ plot_SE$lat <- paste("-", plot_SE$lat, sep = "")
 plot_SW$lat <- paste("-", plot_SW$lat, sep = "")
 plot_SW$lon <- paste("-", plot_SW$lon, sep = "")
 
+plot_all <- rbind(plot_NW, plot_NE, plot_SE, plot_SW)
 # vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
 # vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)
