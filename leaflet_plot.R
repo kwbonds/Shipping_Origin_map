@@ -10,9 +10,29 @@ library(dplyr)
 #   
 # m
 # 
-# leaf_plot <- left_join(vessel_table_plot, Enriched_table, by = c("Requested Vessel"="Vessel"))
-# leaf_plot <- leaf_plot[complete.cases(leaf_plot),]
-# 
+
+load("EDW_IUF_YTD_2016-11-22.rda")
+# Create Enriched_table ----
+EDW_IUF_YTD_clean <- EDW_IUF_YTD %>% 
+  filter((ACTL_SHP_MODE_CD == "O" & CONTAINER_ID != "") & (is.na(ACTUAL_IN_DC_LCL_DATE) | is.na(ACTUAL_STOCKED_LCL_DATE))) 
+
+
+EDW_Table <- EDW_IUF_YTD_clean %>% 
+  select(CONTAINER_ID, ORD_QTY, Total_FCST_ELC) %>% 
+  group_by(CONTAINER_ID) %>% 
+  summarise("Units" = floor(sum(ORD_QTY)), "Total Estimated ELC"= floor(sum(Total_FCST_ELC )))
+
+Enriched_table <- left_join(EDW_Table, container_list, by = c("CONTAINER_ID"= "Container Number"))
+Enriched_table <-  Enriched_table %>% filter(Vessel != "") %>% 
+  group_by(Vessel) %>% 
+  summarise("Units" = floor(sum(Units)), "Total Estimated ELC"= floor(sum(`Total Estimated ELC`)))
+# Create vessel_table_plot ----
+ vessel_table_plot <- subset(vessel_table, Returned!="")
+ # vessel_table_plot <- vessel_table
+# Create table for leafplot ----
+ leaf_plot <- left_join(vessel_table_plot, Enriched_table, by = c("Requested Vessel"="Vessel"))
+ leaf_plot <- leaf_plot %>% filter(Returned != "")
+# OLD ----
 # m <- leaflet() %>% 
 #   addProviderTiles("Esri.WorldTopoMap") %>% 
 #   addMarkers(lng = vessel_table_plot$lon, lat = vessel_table_plot$lat, popup= paste(vessel_table_plot$`Requested Vessel`,paste(" Heading: ", vessel_table_plot$Heading), sep = "<br/>")) %>% 
@@ -26,7 +46,7 @@ library(dplyr)
 # leaf_plot ----
 m <- leaflet() %>% 
   addProviderTiles("Esri.WorldTopoMap") %>% 
-  addMarkers(lng = leaf_plot$lon, lat = leaf_plot$lat, popup= paste(leaf_plot$`Requested Vessel`,paste("Heading: ", leaf_plot$Heading), paste("Total Units: ", format(leaf_plot$Units, big.mark = ",")), paste("Estimated ELC: $", format(leaf_plot$`Total Estimated ELC`, big.mark = ",")), sep = "<br/>")) %>% 
+  addMarkers(lng = leaf_plot$lon[42], lat = leaf_plot$lat[42], popup= paste(leaf_plot$`Requested Vessel`,paste("Last Report: ", leaf_plot$`Last Position DT`),paste("Heading: ", leaf_plot$Heading), paste("Total Units: ", format(leaf_plot$Units, big.mark = ",")), paste("Estimated ELC: $", format(leaf_plot$`Total Estimated ELC`, big.mark = ",")), sep = "<br/>")) %>% 
   addWMSTiles(
     "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
     layers = "nexrad-n0r-900913",
@@ -77,10 +97,27 @@ View(vessels)
 # Facetted tables plot ----  
   m <- leaflet() %>% 
     addProviderTiles("Esri.WorldTopoMap") %>% 
-    addMarkers(lng = plot_NE$lon, lat = plot_NE$lat, popup= paste(plot_NE$`Requested Vessel`, paste("Last Position: ", plot_NE$last_pos_dt),paste(" Heading: ", plot_NE$Heading), sep = "<br/>")) %>% 
-    addMarkers(lng = -(plot_NW$lon), lat = plot_NW$lat, popup= paste(plot_NW$`Requested Vessel`, paste("Last Position: ", plot_NW$last_pos_dt),paste(" Heading: ", plot_NW$Heading), sep = "<br/>")) %>% 
-    addMarkers(lng = plot_SE$lon, lat = -(plot_SE$lat), popup= paste(plot_SE$`Requested Vessel`, paste("Last Position: ", plot_SE$last_pos_dt),paste(" Heading: ", plot_SE$Heading), sep = "<br/>")) %>% 
-    addMarkers(lng = -(plot_SW$lon), lat = -(plot_SW$lat), popup= paste(plot_SW$`Requested Vessel`, paste("Last Position: ", plot_SW$last_pos_dt),paste(" Heading: ", plot_SW$Heading), sep = "<br/>")) %>% 
+    addMarkers(lng = plot_NE$lon, lat = plot_NE$lat, 
+               popup= paste(plot_NE$`Requested Vessel`, 
+                            paste("Last Position: ", plot_NE$`Last Position DT`), 
+                            paste(" Heading: ", plot_NE$Heading), 
+                            paste("Total Units: ", format(plot_NE$Units, big.mark = ",")), 
+                            paste("Estimated ELC: $", format(plot_NE$`Total Estimated ELC`, big.mark = ",")), sep = "<br/>")) %>% 
+    addMarkers(lng = (plot_NW$lon), lat = plot_NW$lat, 
+               popup= paste(plot_NW$`Requested Vessel`, paste("Last Position: ", plot_NW$`Last Position DT`), 
+                            paste(" Heading: ", plot_NW$Heading), 
+                            paste("Total Units: ", format(plot_NW$Units, big.mark = ",")), 
+                            paste("Estimated ELC: $", format(plot_NW$`Total Estimated ELC`, big.mark = ",")), sep = "<br/>")) %>% 
+    # addMarkers(lng = plot_SE$lon, lat = (plot_SE$lat), 
+    #            popup= paste(plot_SE$`Requested Vessel`, paste("Last Position: ", plot_SE$`Last Position DT`),
+    #                         paste(" Heading: ", plot_SE$Heading), 
+    #                         paste("Total Units: ", format(plot_SE$Units, big.mark = ",")), 
+    #                         paste("Estimated ELC: $", format(plot_SE$`Total Estimated ELC`, big.mark = ",")),sep = "<br/>")) %>% 
+    # addMarkers(lng = (plot_SW$lon), lat = (plot_SW$lat), 
+    #            popup= paste(plot_SW$`Requested Vessel`, paste("Last Position: ", plot_SW$`Last Position DT`), 
+    #                         paste(" Heading: ", plot_SW$Heading), 
+    #                         paste("Total Units: ", format(plot_SW$Units, big.mark = ",")), 
+    #                         paste("Estimated ELC: $", format(plot_SW$`Total Estimated ELC`, big.mark = ",")),sep = "<br/>")) %>% 
     addWMSTiles(
       "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
       layers = "nexrad-n0r-900913",
@@ -88,3 +125,4 @@ View(vessels)
       attribution = "Weather data © 2012 IEM Nexrad"
     )
   m
+  

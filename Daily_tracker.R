@@ -4,8 +4,8 @@ library(fread)
 library(dplyr)
 
 # Read daily_tracker file ----
-daily_tracker <- read_csv(file = "G:\\SF-LOGISTICS_METRICS\\daily_tracker\\daily_tracker.csv", 
-                          col_types = cols(`Purchase Order Number` = col_character(), .default = col_character()))
+# daily_tracker <- read_csv(file = "G:\\SF-LOGISTICS_METRICS\\daily_tracker\\daily_tracker.csv", 
+#                           col_types = cols(`Purchase Order Number` = col_character(), .default = col_character()))
 
 daily_tracker <- fread(input = "G:\\SF-LOGISTICS_METRICS\\daily_tracker\\daily_tracker.csv")
 # save(daily_tracker, file = "daily_tracker.rda")
@@ -27,4 +27,4 @@ vessel_list <- daily_tracker %>%
   group_by(Vessel) %>% 
   summarise(`count`= n())
 
-vessel_list2 <- vessel_list[3:103,]
+vessel_list2 <- vessel_list[3:102,]

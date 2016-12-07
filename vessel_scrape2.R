@@ -23,8 +23,9 @@ scrape <- function(boat){
   Sys.sleep(10)
   #webElem3$screenshot(useView  = TRUE, display = TRUE)
   # Get last position date as text ----
-  last_pos <- remDr$findElement(using = "id", "last_report_ts")
-  last_pos_dt <- as.character(last_pos$getElementText())
+  # last_pos <- remDr$findElement(using = "id", "last_report_ts")
+  # last_pos_dt <- as.character(last_pos$getElementText())
+  #webElem3$screenshot(useView  = TRUE, display = TRUE)
   # Get source ----
   my_source <- remDr$getPageSource()
   # my_source <- remDr$getPageSource()
@@ -47,10 +48,14 @@ scrape <- function(boat){
   course <- trimws(course)
   vessel <- substr(my_source, as.numeric(gregexpr(pattern ='og:title',my_source)) + 19, stop = as.numeric(gregexpr(pattern =' - see',my_source))-13)
   
+  last_pos_dt <- substr(my_source, as.numeric(gregexpr(pattern ='last_report_ts',my_source)) + 14, stop = as.numeric(gregexpr(pattern ='last_report_ts',my_source)) +100)
+  if(grepl('<',last_pos_dt)) {last_pos_dt <- substr(last_pos_dt, regexpr('>', last_pos_dt)+1, regexpr('<', last_pos_dt)-1)}
 
   remDr$close()
   pJS$stop()
+  Sys.sleep(5)
   return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course, last_pos_dt))
+  # return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))
   # return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))
 }
 

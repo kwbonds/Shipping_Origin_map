@@ -7,27 +7,32 @@ Sys.sleep(5)
 # eCap <- list(phantomjs.page.settings.loadImages = FALSE)
 # remDr <- remoteDriver(browserName = "phantomjs", extraCapabilities = eCap)
 # remDr$open()
-vessels <- c("CONCORDIA", "HYUNDAI PREMIUM", "MALLECO", "Not a ship")
+# vessels <- c("CONCORDIA", "HYUNDAI PREMIUM", "MALLECO", "Not a ship")
 
 source("vessel_scrape2.R")
 vessel_table <- ldply(vessel_list2$Vessel, function(x) scrape(x), .progress = "text", .inform = TRUE)
+# vessel_table <- ddply(vessel_list2, "Vessel", function(x) scrape(x), .progress = "text", .inform = TRUE)
 names(vessel_table) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading", "Last Position DT")
 
 save(vessel_table, file = "vessel_table.rtf")
 load("vessel_table.rtf")
 
-# vessel_table_plot <- subset(vessel_table, Returned!="" & lat_Hemi== "N" & lon_Hemi=="E")
+leaf_plot <- leaf_plot %>% filter(Returned != "")
 
-plot_NE <- subset(vessel_table, Returned!="" & lat_Hemi== "N" & lon_Hemi=="E")
-plot_Nw <- subset(vessel_table, Returned!="" & lat_Hemi== "N" & lon_Hemi=="W")
-plot_SE <- subset(vessel_table, Returned!="" & lat_Hemi== "S" & lon_Hemi=="E")
-plot_SW <- subset(vessel_table, Returned!="" & lat_Hemi== "S" & lon_Hemi=="W")
+plot_NE <- subset(leaf_plot, Returned!="" & lat_Hemi== "N" & lon_Hemi=="E")
+plot_NW <- subset(leaf_plot, Returned!="" & lat_Hemi== "N" & lon_Hemi=="W")
+plot_SE <- subset(leaf_plot, Returned!="" & lat_Hemi== "S" & lon_Hemi=="E")
+plot_SW <- subset(leaf_plot, Returned!="" & lat_Hemi== "S" & lon_Hemi=="W")
 
+plot_NW$lon <- paste("-", plot_NW$lon, sep = "")
+plot_SE$lat <- paste("-", plot_SE$lat, sep = "")
+plot_SW$lat <- paste("-", plot_SW$lat, sep = "")
+plot_SW$lon <- paste("-", plot_SW$lon, sep = "")
 
 # vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
 # vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)
-vessel_table2 <- ldply(c("CONCORDIA", "HYUNDAI PREMIUM"), function(x) scrape(x), .progress = "text", .inform = TRUE)
+vessel_table2 <- ldply("CONCORDIA", function(x) scrape(x), .progress = "text", .inform = TRUE)
 names(vessel_table2) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading", "Last Position DT")
 # vessel_table3 <- ldply("MALLECO", function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
@@ -38,3 +43,5 @@ names(vessel_table2) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "la
 remDr$navigate("https://www.google.com")
 
 pJS$stop()
+
+
