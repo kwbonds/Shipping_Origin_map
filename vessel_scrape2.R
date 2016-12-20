@@ -2,7 +2,7 @@ scrape <- function(boat){
   # Server setup ----
   # require(RSelenium)
   pJS <- phantom(pjs_cmd = "C:\\Users\\Ke2l8b1\\Documents\\Shipping_origin_map\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe")
-  Sys.sleep(5)
+  Sys.sleep(2)
   eCap <- list(phantomjs.page.settings.loadImages = FALSE)
   remDr <- remoteDriver(browserName = "phantomjs", extraCapabilities = eCap)
   Sys.sleep(2)
@@ -10,7 +10,7 @@ scrape <- function(boat){
   Sys.sleep(2)
   # Navigate to www.vesselfinder.com ----
   remDr$navigate("https://www.vesselfinder.com/vessels")
-  Sys.sleep(5)
+  Sys.sleep(10)
   # Find input field and activate ----
   webElem <- remDr$findElement(using = "css", "#search-holder .selectize-input.items.not-full")
   webElem$clickElement()
@@ -45,6 +45,7 @@ scrape <- function(boat){
   
   course <- substr(my_source, as.numeric(gregexpr(pattern ='Course/Speed',my_source)) + 95, stop = as.numeric(gregexpr(pattern ='Course/Speed',my_source)) + 102)
   # course <- substr(my_source, as.numeric(gregexpr(pattern =' °&nbsp',my_source)) -5, stop = as.numeric(gregexpr(pattern =' °&nbsp',my_source))-1)
+  if(grepl('&', course)) { course <- substr(course, 1, regexpr('&', course)-1) }
   course <- trimws(course)
   vessel <- substr(my_source, as.numeric(gregexpr(pattern ='og:title',my_source)) + 19, stop = as.numeric(gregexpr(pattern =' - see',my_source))-13)
   
@@ -53,7 +54,7 @@ scrape <- function(boat){
 
   remDr$close()
   pJS$stop()
-  Sys.sleep(5)
+  Sys.sleep(3)
   return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course, last_pos_dt))
   # return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))
   # return(c(boat, vessel, lon, lon_hemi, lat, lat_hemi, course))

@@ -10,12 +10,12 @@ Sys.sleep(5)
 # vessels <- c("CONCORDIA", "HYUNDAI PREMIUM", "MALLECO", "Not a ship")
 
 source("vessel_scrape2.R")
-vessel_table <- ldply(vessel_list2$Vessel, function(x) scrape(x), .progress = "text", .inform = TRUE)
+vessel_table <- ldply(EDW_vessels$Vessel, function(x) scrape(x), .progress = "text", .inform = TRUE)
 # vessel_table <- ddply(vessel_list2, "Vessel", function(x) scrape(x), .progress = "text", .inform = TRUE)
 names(vessel_table) <- c("Requested Vessel", "Returned", "lon", "lon_Hemi", "lat", "lat_Hemi", "Heading", "Last Position DT")
 
-save(vessel_table, file = "vessel_table.rtf")
-load("vessel_table.rtf")
+# save(vessel_table, file = "vessel_table.rtf")
+# load("vessel_table.rtf")
 
 leaf_plot <- leaf_plot %>% filter(Returned != "")
 
@@ -30,6 +30,7 @@ plot_SW$lat <- paste("-", plot_SW$lat, sep = "")
 plot_SW$lon <- paste("-", plot_SW$lon, sep = "")
 
 plot_all <- rbind(plot_NW, plot_NE, plot_SE, plot_SW)
+
 # vessel_table2 <- ldply(vessels, function(x) scrape(x), .progress = "text", .inform = TRUE)
 # 
 # vessel_table <- ldply("HYUNDAI PREMIUM", function(x) scrape(x), .progress = "text", .inform = TRUE)

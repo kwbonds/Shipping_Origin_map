@@ -14,10 +14,14 @@ library(dplyr)
 load("EDW_IUF_YTD_2016-11-22.rda")
 # Create Enriched_table ----
 EDW_IUF_YTD_clean <- EDW_IUF_YTD %>% 
-  filter((ACTL_SHP_MODE_CD == "O" & CONTAINER_ID != "") & (is.na(ACTUAL_IN_DC_LCL_DATE) | is.na(ACTUAL_STOCKED_LCL_DATE))) 
+  filter(ACTL_SHP_MODE_CD == "O" & CONTAINER_ID != "") %>% 
+filter(is.na(ACTUAL_IN_DC_LCL_DATE) & 
+         is.na(ACTUAL_STOCKED_LCL_DATE) &
+         Lateness != "Unmeasured" & Shp_Cxl_WK <= 43)
+        
 
 
-EDW_Table <- EDW_IUF_YTD_clean %>% 
+EDW_Table_test <- EDW_IUF_YTD_clean %>% 
   select(CONTAINER_ID, ORD_QTY, Total_FCST_ELC) %>% 
   group_by(CONTAINER_ID) %>% 
   summarise("Units" = floor(sum(ORD_QTY)), "Total Estimated ELC"= floor(sum(Total_FCST_ELC )))
