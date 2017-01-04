@@ -55,7 +55,7 @@ m <- leaflet() %>%
                           paste("Last Report: ", plot_all$`Last Position DT`),
                           paste("Heading: ", plot_all$Heading), 
                           paste("Total Units: ", format(plot_all$Units, big.mark = ",")), 
-                          paste("Estimated ELC: $", format(plot_all$`Total Estimated ELC`, big.mark = ",")), 
+                          paste("Estimated ELC: $", format(plot_all$`Total Estimated ELC`, big.mark = ",")),
                           sep = "<br/>")) %>% 
   addWMSTiles(
     "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",

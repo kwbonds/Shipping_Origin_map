@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(leaflet)
 require(RSelenium)
+library(rChoiceDialogs)
 
 # Choose file directory ----
 choose_file_directory <- function()
@@ -21,7 +22,6 @@ prompt_for_week <- function()
 SOT_OTS_directory <- choose_file_directory()
 
 EOW <- prompt_for_week()
-SOT_OTS_directory <- choose_file_directory()
 
 # EDW_IUF_YTD_clean <- EDW_IUF_YTD %>% 
 #   filter((ACTL_SHP_MODE_CD == "O" & CONTAINER_ID != "") & !(is.na(ACTUAL_IN_DC_LCL_DATE) | is.na(ACTUAL_STOCKED_LCL_DATE) | is.na(ACTUAL_DEST_CONSOL_LCL_DATE) | is.na(ACTUAL_DOM_DEPART_LCL_DATE))) 
