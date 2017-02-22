@@ -1,0 +1,46 @@
+---
+title: "Shipping Map"
+output: html_notebook
+---
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=FALSE}
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(leaflet)
+require(RSelenium)
+library(rChoiceDialogs)
+
+# SOT_OTS_directory <- choose_file_directory()
+SOT_OTS_directory <- "C:\\Users\\Ke2l8b1\\Documents\\Shipping_origin_map\\2017-02-19"
+
+# EOW <- prompt_for_week()
+EOW <- 2
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=FALSE}
+load("map1.rda")
+load("map2.rda")
+load("vessel_table.rda")
+```
+
+#### Map with Clustering 
+
+  Below is a representation of number of ships currently carrying Gap Inc goods for Ship Cancel Week #`r EOW` clustered together as a visual aid. Though these data are not fully scrubbed (some noise is apparent due to missing InDC dates in the system), this is a good representation of what is currently "On the water".   The geolocation information is screen scraped from www.vesselfinder.com. The ELC and Units are from EDW. Last ship position reported, at the time of the screen scrape, was `r max(vessel_table$"Last Position DT")`. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=FALSE, fig.height=6, fig.width=10}
+m %>% setView(lng = -1.44, lat = 32.32, zoom = 2)
+```
+
+\newline
+
+#### Non-clustered with Weather overlay
+
+The below map is somewhat easier to browse. This map could be combined with the one above (as a single map) to allow clustering to be turned on an off with some applicaiton hosting. Without hosting, this is a viable solution to allow portability. 
+
+
+```{r echo=FALSE, warning=FALSE, message=TRUE, comment=FALSE, fig.height=6, fig.width=10}
+m2 %>% setView(lng = 5, lat = 32.32, zoom = 2)
+```
+
